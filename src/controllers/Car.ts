@@ -1,5 +1,3 @@
-/* eslint-disable max-lines-per-function */
-/* eslint-disable complexity */
 import { Request, Response } from 'express';
 import Controller, { ResponseError } from '.';
 import { Car } from '../interfaces/CarInterface';
@@ -13,18 +11,13 @@ class CarController extends Controller<Car> {
   }
 
   create = async (
-    req: Request<Car>,
+    req: Request,
     res: Response<Car | ResponseError>,
   ): Promise<typeof res> => {
     const { body } = req;
     try {
       const car = await this.service.create(body);
-      if (!car) {
-        return res.status(500).json({ error: this.errors.internal });
-      }
-      if ('error' in car) {
-        return res.status(400).json(car);
-      }
+      if (!car) throw new Error(this.errors.internal);
       return res.status(201).json(car);
     } catch (err) {
       return res.status(500).json({ error: this.errors.internal });
@@ -51,20 +44,10 @@ class CarController extends Controller<Car> {
     res: Response<Car | ResponseError>,
   ): Promise<typeof res> => {
     const { id } = req.params;
-    if (!id) {
-      return res.status(400)
-        .json({ error: this.errors.requiredId });
-    }
-
+    if (!id) res.status(400).json({ error: this.errors.requiredId });
+    const { body } = req;
     try {
-      const { body } = req;
       const car = await this.service.update(id, body);
-      if (!car) {
-        return res.status(500).json({ error: this.errors.internal });
-      }
-      if ('error' in car) {
-        return res.status(400).json(car);
-      }
       if (!car) return res.status(404).json({ error: this.errors.notFound });
       return res.json(car);
     } catch (err) {

@@ -3,6 +3,7 @@ import * as Joi from 'joi';
 const emptyFieldMessage = 'All fields must be filled';
 
 const carSchema = Joi.object({
+  _id: Joi.string(),
   model: Joi.string().min(3).required().messages({
     'string.min': 'Invalid Model',
     'string.empty': emptyFieldMessage,
@@ -19,9 +20,8 @@ const carSchema = Joi.object({
     'string.empty': emptyFieldMessage,
     'any.required': emptyFieldMessage,
   }),
-  status: Joi.boolean().required().messages({
+  status: Joi.boolean().messages({
     'boolean.base': 'Invalid Status',
-    'any.required': emptyFieldMessage,
   }),
   buyValue: Joi.number().integer().min(0).required()
     .messages({

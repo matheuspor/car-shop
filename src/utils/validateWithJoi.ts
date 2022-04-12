@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import { ObjectSchema } from 'joi';
-import errorStatus from './joiErrorStatus';
+import ErrorStatus from './joiErrorStatus';
 
 const validateWithJoi = (schema:ObjectSchema) => 
   (req:Request, res:Response, next:NextFunction) => {
     const { error } = schema.validate(req.body);
 
     if (error) {
-      const errorType = error.details[0].type;
-      return res.status(errorStatus[errorType])
+      const errorType = error.details[0].type as keyof typeof ErrorStatus;
+      return res.status(ErrorStatus[errorType])
         .send({ message: error.message });
     }
     next();

@@ -1,11 +1,10 @@
-import { IerrorStatus } from '../interfaces/IErrorStatus';
+enum ErrorStatus {
+  'any.required' = 400,
+  'boolean.base' = 400,
+  'number.greater' = 400,
+  'number.lower' = 400,
+  'string.empty' = 400,
+  'string.min' = 400,
+}
 
-const errorStatus:IerrorStatus = {
-  'any.required': 401,
-  'string.empty': 401,
-  'string.min': 401,
-  'string.base': 422,
-  'string.email': 401,
-};
-
-export default errorStatus;
+export default ErrorStatus;

@@ -18,7 +18,7 @@ abstract class Controller<T> {
   constructor(protected service: Service<T>) { }
 
   abstract create(
-    req: Request<T>,
+    req: Request,
     res: Response<T | ResponseError>,
   ): Promise<typeof res>;
 

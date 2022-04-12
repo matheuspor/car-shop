@@ -23,7 +23,7 @@ class App {
   }
 
   public addRouter() {
-    this.app.use(this.CarRoutes);
+    this.app.use('/cars', this.CarRoutes);
   }
 
   public getApp() {

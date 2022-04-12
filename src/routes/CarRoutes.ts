@@ -8,21 +8,17 @@ class CarRoutes {
 
   protected controller: CarController;
 
-  protected validate: typeof validateWithJoi;
-
   constructor() {
     this.controller = new CarController();
     this.addRoute();
-    this.validate = validateWithJoi;
   }
 
   public addRoute(): void {
-    const route = '/cars';
-    this.router.get(route, this.controller.read);
-    this.router.get(`${route}/:id`, this.controller.readOne);
-    this.router.post(route, this.controller.create);
-    this.router.put(`${route}/:id`, this.controller.update);
-    this.router.delete(`${route}/:id`, this.controller.delete);
+    this.router.get('/', this.controller.read);
+    this.router.post('/', validateWithJoi(carSchema), this.controller.create);
+    this.router.get('/:id', this.controller.readOne);
+    this.router.put('/:id', this.controller.update);
+    this.router.delete('/:id', this.controller.delete);
   }
 }
 
