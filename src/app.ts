@@ -1,12 +1,17 @@
 import express, { Router } from 'express';
 import connectToDatabase from './connection';
+import CarRoutes from './routes/CarRoutes';
 
 class App {
   public app: express.Application;
 
+  protected CarRoutes: Router;
+
   constructor() {
     this.app = express();
     this.app.use(express.json());
+    this.CarRoutes = new CarRoutes().router;
+    this.addRouter();
   }
 
   public startServer(PORT: string | number = 3001): void {
@@ -17,8 +22,8 @@ class App {
     );
   }
 
-  public addRouter(router: Router) {
-    this.app.use(router);
+  public addRouter() {
+    this.app.use(this.CarRoutes);
   }
 
   public getApp() {
