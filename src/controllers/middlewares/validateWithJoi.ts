@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ObjectSchema } from 'joi';
-import ErrorStatus from './joiErrorStatus';
+import ErrorStatus from '../../utils/joiErrorStatus';
 
 const validateWithJoi = (schema:ObjectSchema) => 
   (req:Request, res:Response, next:NextFunction) => {

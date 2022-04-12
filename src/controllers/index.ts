@@ -8,8 +8,6 @@ export type ResponseError = {
 enum ControllerErrors {
   internal = 'Internal Server Error',
   notFound = 'Object not found',
-  requiredId = 'Id is required',
-  badRequest = 'Bad request',
 }
 
 abstract class Controller<T> {
@@ -17,10 +15,19 @@ abstract class Controller<T> {
 
   constructor(protected service: Service<T>) { }
 
-  abstract create(
+  create = async (
     req: Request,
-    res: Response<T | ResponseError>,
-  ): Promise<typeof res>;
+    res: Response,
+  ): Promise<typeof res> => {
+    const { body } = req;
+    try {
+      const item = await this.service.create(body);
+      if (!item) throw new Error(this.errors.internal);
+      return res.status(201).json(item);
+    } catch (err) {
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  };
 
   read = async (
     _req: Request,
@@ -34,19 +41,49 @@ abstract class Controller<T> {
     }
   };
 
-  abstract readOne(
-    req: Request<{ id: string; }>,
-    res: Response<T | ResponseError>
-  ): Promise<typeof res>;
+  readOne = async (
+    req: Request,
+    res: Response,
+  ): Promise<typeof res> => {
+    const { id } = req.params;
+    try {
+      const item = await this.service.readOne(id);
+      return item
+        ? res.json(item)
+        : res.status(404).json({ error: this.errors.notFound });
+    } catch (error) {
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  };
 
-  abstract update(
-    req: Request<{ id: string; }, unknown, T>,
-    res: Response<T | ResponseError>
-  ): Promise<typeof res>;
+  update = async (
+    req: Request,
+    res: Response,
+  ): Promise<typeof res> => {
+    const { id } = req.params;
+    const { body } = req;
+    try {
+      const item = await this.service.update(id, body);
+      if (!item) return res.status(404).json({ error: this.errors.notFound });
+      return res.json(item);
+    } catch (err) {
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  };
 
-  abstract delete(
-    req: Request<{ id: string; }>,
-    res: Response<T | ResponseError>
-  ): Promise<typeof res>;
+  delete = async (
+    req: Request,
+    res: Response,
+  ): Promise<typeof res> => {
+    const { id } = req.params;
+    try {
+      const item = await this.service.delete(id);
+      return item
+        ? res.status(204).json(item)
+        : res.status(404).json({ error: this.errors.notFound });
+    } catch (error) {
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  };
 }
 export default Controller;

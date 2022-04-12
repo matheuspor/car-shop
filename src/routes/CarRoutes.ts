@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import CarController from '../controllers/Car';
+import validateWithJoi from '../controllers/middlewares/validateWithJoi';
+import verifyId from '../controllers/middlewares/verifyId';
 import carSchema from '../utils/joiSchemas';
-import validateWithJoi from '../utils/validateWithJoi';
 
 class CarRoutes {
   public router = Router();
@@ -16,9 +17,9 @@ class CarRoutes {
   public addRoute(): void {
     this.router.get('/', this.controller.read);
     this.router.post('/', validateWithJoi(carSchema), this.controller.create);
-    this.router.get('/:id', this.controller.readOne);
-    this.router.put('/:id', this.controller.update);
-    this.router.delete('/:id', this.controller.delete);
+    this.router.get('/:id', verifyId(), this.controller.readOne);
+    this.router.put('/:id', verifyId(), this.controller.update);
+    this.router.delete('/:id', verifyId(), this.controller.delete);
   }
 }
 
