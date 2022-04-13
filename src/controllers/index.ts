@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import Service from '../services';
 
-export type ResponseError = {
-  error: unknown;
-};
-
 enum ControllerErrors {
   internal = 'Internal Server Error',
   notFound = 'Object not found',
@@ -31,7 +27,7 @@ abstract class Controller<T> {
 
   read = async (
     _req: Request,
-    res: Response<T[] | ResponseError>,
+    res: Response,
   ): Promise<typeof res> => {
     try {
       const objs = await this.service.read();
