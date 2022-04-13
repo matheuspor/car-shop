@@ -31,7 +31,7 @@ abstract class Controller<T> {
   ): Promise<typeof res> => {
     try {
       const objs = await this.service.read();
-      return res.json(objs);
+      return res.status(200).json(objs);
     } catch (err) {
       return res.status(500).json({ error: this.errors.internal });
     }
@@ -45,7 +45,7 @@ abstract class Controller<T> {
     try {
       const item = await this.service.readOne(id);
       return item
-        ? res.json(item)
+        ? res.status(200).json(item)
         : res.status(404).json({ error: this.errors.notFound });
     } catch (error) {
       return res.status(500).json({ error: this.errors.internal });
@@ -61,7 +61,7 @@ abstract class Controller<T> {
     try {
       const item = await this.service.update(id, body);
       if (!item) return res.status(404).json({ error: this.errors.notFound });
-      return res.json(item);
+      return res.status(200).json(item);
     } catch (err) {
       return res.status(500).json({ error: this.errors.internal });
     }
