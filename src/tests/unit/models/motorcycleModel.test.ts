@@ -1,7 +1,6 @@
 import { expect } from "chai"
 import mongoose from 'mongoose'
 import Sinon from "sinon"
-import CarModel from "../../../models/Car"
 import MotorcycleModel from "../../../models/Motorcycle"
 
 describe('Tests Motorcycle Model', () => {
